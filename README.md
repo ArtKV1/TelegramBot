@@ -1,3 +1,3 @@
 # TelegramBot
-<p>Version 1.2.0</p>
-<p>There are problems with multitasking</p>
+<p>Version 1.2.1</p>
+<p>Need to update function Become Tutor</p>
