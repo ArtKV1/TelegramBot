@@ -22,8 +22,8 @@ namespace TelegramBot
                 var chatId = update.CallbackQuery.From.Id;
                 var messageId = update.CallbackQuery.Message.MessageId;
 
-                Console.WriteLine($"{chatId}\t|\t{callbackData}");
-                if (callbackData== "main_menu")
+                Console.WriteLine($"{chatId}\t|\t{callbackData}\t|\t{update.CallbackQuery.Message.MessageId}");
+                if (callbackData == "main_menu")
                 {
                     await Messages.Messages.SendStartMessageAsync(botClient, update, cancellationToken);
                 }
@@ -33,9 +33,37 @@ namespace TelegramBot
                 }
                 else if (callbackData == "school")
                 {
-                    await Messages.University.Messages.SendCategoriesMessageAsync(botClient, update, cancellationToken);
+                    await Messages.School.Messages.SendCategoriesMessageAsync(botClient, update, cancellationToken);
                 }
-                else if(callbackData == "university")
+                else if (callbackData.Contains("school_subj"))
+                {
+                    var categoryId = callbackData.Split('&')[1];
+
+                    await Messages.School.Messages.SendSubjectForSelectedCategoryAsync(botClient, update, cancellationToken, categoryId);
+                }
+                else if (callbackData.Contains("school_tutors_subj"))
+                {
+                    var subjId = callbackData.Split('&')[1];
+                    var categoryId = callbackData.Split('&')[2];
+                    await Messages.School.Messages.SendTutorsForSubjectAsync(botClient, update, cancellationToken, subjId, categoryId);
+                }
+                else if (callbackData.Contains("school_selected_tutor"))
+                {
+                    var tutorId = callbackData.Split('&')[1];
+                    var categoryId = callbackData.Split('&')[2];
+                    var subjId = callbackData.Split('&')[3];
+
+                    await Messages.School.Messages.SendSelectedTutorInfoMessageAsync(botClient, update, cancellationToken, subjId, categoryId, tutorId);
+                }
+                else if (callbackData.Contains("back_school_tutor"))
+                {
+                    var tutorId = callbackData.Split('&')[1];
+                    var categoryId = callbackData.Split('&')[2];
+                    var subjId = callbackData.Split('&')[3];
+
+                    await Messages.School.Messages.SendTutorForSubjectAsync(botClient, update, cancellationToken, categoryId, subjId, tutorId);
+                }
+                else if (callbackData == "university")
                 {
                     await Messages.University.Messages.SendCategoriesMessageAsync(botClient, update, cancellationToken);
                 }
@@ -58,6 +86,18 @@ namespace TelegramBot
                     var subjId = callbackData.Split('&')[3];
 
                     await Messages.University.Messages.SendSelectedTutorInfoMessageAsync(botClient, update, cancellationToken, subjId, categoryId, tutorId);
+                }
+                else if (callbackData.Contains("back_university_tutor"))
+                {
+                    var tutorId = callbackData.Split('&')[1];
+                    var categoryId = callbackData.Split('&')[2];
+                    var subjId = callbackData.Split('&')[3];
+
+                    await Messages.University.Messages.SendTutorForSubjectAsync(botClient, update, cancellationToken, categoryId, subjId, tutorId);
+                }
+                else if (callbackData == "become_tutor")
+                {
+                    await Messages.BecomeTutor.Messages.SendFirstMessageBecomeTutor(botClient, update, cancellationToken);
                 }
             }
             else

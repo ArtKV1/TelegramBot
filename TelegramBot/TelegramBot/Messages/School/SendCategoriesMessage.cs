@@ -9,7 +9,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot.Messages.University
+namespace TelegramBot.Messages.School
 {
     public static partial class Messages
     {
@@ -52,7 +52,7 @@ namespace TelegramBot.Messages.University
             var inlineKeyBoardButtons = categories.Select(category =>
                 new[]{ InlineKeyboardButton.WithCallbackData(
                     text: category.Value,
-                    callbackData: $"university_subj&{category.Key}")
+                    callbackData: $"school_subj&{category.Key}")
                 }).ToList();
 
             inlineKeyBoardButtons.Add(new[]{ 

@@ -8,7 +8,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot.Messages.University
+namespace TelegramBot.Messages.School
 {
     public static partial class Messages
     {
@@ -23,7 +23,7 @@ namespace TelegramBot.Messages.University
             {
                 conn.Open();
 
-                using (var cmd = new NpgsqlCommand($"SELECT id, subject FROM university_subjects WHERE categoryid = {categoryId}", conn))
+                using (var cmd = new NpgsqlCommand($"SELECT id, subject FROM school_subjects WHERE categoryid = {categoryId}", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -59,11 +59,11 @@ namespace TelegramBot.Messages.University
             var inlineKeyBoardButtons = subjects.Select(subject =>
                 new[]{ InlineKeyboardButton.WithCallbackData(
                     text: subject.Value,
-                    callbackData: $"university_tutors_subj&{subject.Key}&{categoryId}")
+                    callbackData: $"school_tutors_subj&{subject.Key}&{categoryId}")
                 }).ToList();
 
             inlineKeyBoardButtons.Add(new[]{
-                InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "university")
+                InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "school")
             });
 
             var inlineKeyboard = new InlineKeyboardMarkup(inlineKeyBoardButtons);

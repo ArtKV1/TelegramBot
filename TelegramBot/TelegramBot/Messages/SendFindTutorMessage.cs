@@ -13,17 +13,8 @@ namespace TelegramBot.Messages
     {
         public static async Task SendFindTutorMessageAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            var chatId = new long();
+            var chatId = update.CallbackQuery.Message.Chat.Id;
             var messageId = update.CallbackQuery.Message.MessageId;
-
-            if (update.CallbackQuery != null)
-            {
-                chatId = update.CallbackQuery.From.Id;
-            }
-            else
-            {
-                chatId = update.Message.Chat.Id;
-            }
 
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {

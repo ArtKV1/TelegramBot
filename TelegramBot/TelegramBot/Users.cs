@@ -8,6 +8,6 @@ namespace TelegramBot
 {
     public static class Users
     {
-        public static Dictionary<long, int> MessageToDelete = new Dictionary<long, int>();
+        public static Dictionary<long, List<int>> MessageToDelete = new Dictionary<long, List<int>>();
     }
 }

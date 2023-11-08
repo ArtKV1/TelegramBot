@@ -8,7 +8,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot.Messages.University
+namespace TelegramBot.Messages.School
 {
     public static partial class Messages
     {
@@ -22,7 +22,7 @@ namespace TelegramBot.Messages.University
             {
                 conn.Open();
 
-                using (var cmd = new NpgsqlCommand($"SELECT telegram FROM university_teachers WHERE id = {tutorId}", conn))
+                using (var cmd = new NpgsqlCommand($"SELECT telegram FROM school_teachers WHERE id = {tutorId}", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -40,7 +40,7 @@ namespace TelegramBot.Messages.University
                         {
                             new []
                             {
-                                InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: $"back_university_tutor&{tutorId}&{categoryId}&{subjId}")
+                                InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: $"back_school_tutor&{tutorId}&{categoryId}&{subjId}")
                             }
                         });
             try

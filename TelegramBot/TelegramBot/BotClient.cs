@@ -7,7 +7,7 @@ namespace TelegramBot
 {
     public class BotClient
     {
-        public static async Task CreateClientAsync()
+        public static void CreateClient()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

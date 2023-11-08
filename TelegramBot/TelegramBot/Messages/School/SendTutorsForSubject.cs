@@ -11,7 +11,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot.Messages.University
+namespace TelegramBot.Messages.School
 {
     public static partial class Messages
     {
@@ -26,7 +26,7 @@ namespace TelegramBot.Messages.University
             {
                 conn.Open();
 
-                using (var cmd = new NpgsqlCommand($"SELECT id, fullname, description FROM university_teachers WHERE subjectid = {subjId}", conn))
+                using (var cmd = new NpgsqlCommand($"SELECT id, fullname, description FROM school_teachers WHERE subjectid = {subjId}", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -63,7 +63,7 @@ namespace TelegramBot.Messages.University
                 {
                     new []
                     {
-                        InlineKeyboardButton.WithCallbackData(text: "Выбрать", callbackData: $"university_selected_tutor&{tutorId}&{categoryId}&{subjId}"),
+                        InlineKeyboardButton.WithCallbackData(text: "Выбрать", callbackData: $"school_selected_tutor&{tutorId}&{categoryId}&{subjId}"),
                     }
                 });
 
@@ -87,7 +87,7 @@ namespace TelegramBot.Messages.University
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: $"university_subj&{categoryId}"),
+                    InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: $"school_subj&{categoryId}"),
                 }
             });
 
