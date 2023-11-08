@@ -1,194 +1,87 @@
-﻿using Npgsql;
-using Telegram.Bot;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Xsl;
 using Telegram.Bot.Types;
+using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
-using TelegramBot.MessageSenders.School;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.InlineQueryResults;
 
 namespace TelegramBot
 {
-    public static class MessageHandler
+    public class MessageHandler
     {
-        public static async void BotInWork(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+        public static async Task SendMessageHandler(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            if (message != null)
+            if (update.CallbackQuery != null)
             {
-                Console.WriteLine($"{message.Chat.Id}\t|\t{message.Text}");
-                await botClient.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    text: "В данный момент бот не работает, попробуйте заглянуть позже.",
-                    replyMarkup: new ReplyKeyboardRemove());
-            }
-        }
+                var callbackData = update.CallbackQuery.Data;
+                var chatId = update.CallbackQuery.From.Id;
+                var messageId = update.CallbackQuery.Message.MessageId;
 
-        private static void FillingCommandHandlers()
-        {
-            CommandHandlers.AllCommandHandlers = new Dictionary<string, string>();
-            CommandHandlers.SubjectCommandHandlers = new Dictionary<string, Action<ITelegramBotClient, Message>>();
-            CommandHandlers.SupportCommandHandlers = new Dictionary<string, Action<ITelegramBotClient, Message>>();
-            CommandHandlers.SelectedTutorCommandHandlers = new Dictionary<string, Action<ITelegramBotClient, Message>>();
-            CommandHandlers.DifficultySelectionCommandHandlers = new Dictionary<string, Action<ITelegramBotClient, Message>>();
-
-            CommandHandlers.AllCommandHandlers["/start"] = "/start";
-            CommandHandlers.AllCommandHandlers["Вернуться в главное меню"] = "Вернуться в главное меню";
-            CommandHandlers.AllCommandHandlers["Назад"] = "Назад";
-            CommandHandlers.AllCommandHandlers["Найти репетитора"] = "Найти репетитора";
-            CommandHandlers.AllCommandHandlers["Стать репетитором"] = "Стать репетитором";
-            CommandHandlers.AllCommandHandlers["Обратная связь"] = "Обратная связь";
-
-            CommandHandlers.DifficultySelectionCommandHandlers["Школьные предметы"] = SenderOfSchoolSubjectsListMessage.SendSubjectsListMessage;
-            /*CommandHandlers.DifficultySelectionCommandHandlers["Предметы ВУЗов"] = SenderOfUniversitySubjectsListMessage.SendSubjectsListMessage;*/
-
-            var connString = "Host=localhost;Port=5432;Username=postgres;Password=123;Database=TelegramBot";
-            var conn = new NpgsqlConnection(connString);
-            conn.Open();
-
-            var cmd = new NpgsqlCommand("SELECT idtutor FROM tutors", conn);
-            var reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-            {
-                var command = reader.GetInt32(0);
-                CommandHandlers.AllCommandHandlers[command.ToString()] = command.ToString();
-            }
-
-            reader.Close();
-            cmd.Dispose();
-
-            cmd = new NpgsqlCommand("SELECT subject FROM subjects", conn);
-            reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-            {
-                var command = reader.GetString(0);
-                CommandHandlers.AllCommandHandlers[command] = command;
-                CommandHandlers.SubjectCommandHandlers[command] = SenderOfTutorsForCurrentSubjectMessage.SendTutorsForSubjectMessage;
-            }
-            CommandHandlers.AllCommandHandlers["Здесь нет моего предмета"] = "Здесь нет моего предмета";
-            CommandHandlers.SubjectCommandHandlers["Здесь нет моего предмета"] = MessageSenders.SenderOfSupportMessage.SendSupportMessage;
-            CommandHandlers.SubjectCommandHandlers["Назад"] = MessageSenders.SenderOfStartMessage.SendStartMessage;
-
-            reader.Close();
-            cmd.Dispose();
-
-            CommandHandlers.StartCommandHandlers = new Dictionary<string, Action<ITelegramBotClient, Message>>();
-
-            CommandHandlers.StartCommandHandlers["/start"] = MessageSenders.SenderOfStartMessage.SendStartMessage;
-            CommandHandlers.StartCommandHandlers["Назад"] = MessageSenders.SenderOfStartMessage.SendStartMessage;
-            CommandHandlers.StartCommandHandlers["Вернуться в главное меню"] = MessageSenders.SenderOfStartMessage.SendStartMessage;
-            CommandHandlers.StartCommandHandlers["Найти репетитора"] = SenderOfSchoolSubjectsListMessage.SendSubjectsListMessage;
-            CommandHandlers.StartCommandHandlers["Стать репетитором"] = MessageSenders.SenderOfSupportMessage.SendSupportMessage;
-
-            CommandHandlers.SupportCommandHandlers["Назад"] = MessageSenders.SenderOfStartMessage.SendStartMessage;
-
-            CommandHandlers.SelectedTutorCommandHandlers["Назад"] = SenderOfSchoolSubjectsListMessage.SendSubjectsListMessage;
-        }
-
-        private static bool IsCommandIsAllowed(long userId, string command)
-        {
-            UserStates currentState;
-            if (CommandHandlers.UsersState.TryGetValue(userId, out currentState))
-            {
-                if (currentState == UserStates.MainMenu)
+                Console.WriteLine($"{chatId}\t|\t{callbackData}");
+                if (callbackData== "main_menu")
                 {
-                    return CommandHandlers.AllCommandHandlers.ContainsKey(command) && CommandHandlers.StartCommandHandlers.ContainsKey(command);
+                    await Messages.Messages.SendStartMessageAsync(botClient, update, cancellationToken);
                 }
-                else if (currentState == UserStates.FindTutor)
+                else if (callbackData == "find_tutor")
                 {
-                    return CommandHandlers.AllCommandHandlers.ContainsKey(command) && CommandHandlers.SubjectCommandHandlers.ContainsKey(command);
+                    await Messages.Messages.SendFindTutorMessageAsync(botClient, update, cancellationToken);
                 }
-                else if (currentState == UserStates.Support)
+                else if (callbackData == "school")
                 {
-                    return CommandHandlers.AllCommandHandlers.ContainsKey(command) && command == "Назад";
+                    await Messages.University.Messages.SendCategoriesMessageAsync(botClient, update, cancellationToken);
                 }
-                else if (currentState == UserStates.SelectedSubject)
+                else if(callbackData == "university")
                 {
-                    try
+                    await Messages.University.Messages.SendCategoriesMessageAsync(botClient, update, cancellationToken);
+                }
+                else if (callbackData.Contains("university_subj"))
+                {
+                    var categoryId = callbackData.Split('&')[1];
+
+                    await Messages.University.Messages.SendSubjectForSelectedCategoryAsync(botClient, update, cancellationToken, categoryId);
+                }
+                else if (callbackData.Contains("university_tutors_subj"))
+                {
+                    var subjId = callbackData.Split('&')[1];
+                    var categoryId = callbackData.Split('&')[2];
+                    await Messages.University.Messages.SendTutorsForSubjectAsync(botClient, update, cancellationToken, subjId, categoryId);
+                }
+                else if (callbackData.Contains("university_selected_tutor"))
+                {
+                    var tutorId = callbackData.Split('&')[1];
+                    var categoryId = callbackData.Split('&')[2];
+                    var subjId = callbackData.Split('&')[3];
+
+                    await Messages.University.Messages.SendSelectedTutorInfoMessageAsync(botClient, update, cancellationToken, subjId, categoryId, tutorId);
+                }
+            }
+            else
+            {
+                if (update.Message != null)
+                {
+                    Console.WriteLine($"{update.Message.Chat.Id}\t|\t{update.Message.Text}");
+
+                    InlineKeyboardMarkup inlineKeyboard = new(new[]
                     {
-                        return CommandHandlers.AllCommandHandlers.ContainsKey(command) && (CommandHandlers.TutorForCurrentSubjectCommandHandlers[userId].ContainsKey(int.Parse(command)));
-                    }
-                    catch
-                    {
-                        return command == "Назад";
-                    }
-                }
-                else if (currentState == UserStates.SelectedTutor)
-                {
-                    return CommandHandlers.AllCommandHandlers.ContainsKey(command) && command == "Назад";
-                }
-            }
-            return false;
-        }
-
-        public static async void MessageSendersController(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
-        {
-
-            if (message != null)
-            {
-                long userId = message.Chat.Id;
-                string command = message.Text;
-
-                Console.WriteLine(message.Chat.Id + "\t" + message.Text);
-
-                if (CommandHandlers.AllCommandHandlers == null)
-                {
-                    FillingCommandHandlers();
-                }
-
-                if (!CommandHandlers.UsersState.ContainsKey(userId))
-                {
-                    CommandHandlers.UsersState[userId] = UserStates.MainMenu;
-                }
-
-                if (command == "/start")
-                {
-                    CommandHandlers.UsersState[userId] = UserStates.MainMenu;
-                }
-                if (IsCommandIsAllowed(userId, command))
-                {
-                    if (CommandHandlers.UsersState.TryGetValue(userId, out var states))
-                    {
-                        if (states == UserStates.MainMenu)
+                        new []
                         {
-                            CommandHandlers.StartCommandHandlers[command](botClient, message);
+                            InlineKeyboardButton.WithCallbackData(text: "Найти репетитора", callbackData: "find_tutor"),
+                            InlineKeyboardButton.WithCallbackData(text: "Стать репетитором", callbackData: "become_tutor")
                         }
-                        else if (states == UserStates.FindTutor)
-                        {
-                            CommandHandlers.SubjectCommandHandlers[command](botClient, message);
-                        }
-                        else if (states == UserStates.Support)
-                        {
-                            CommandHandlers.SupportCommandHandlers[command](botClient, message);
-                        }
-                        else if (states == UserStates.SelectedSubject)
-                        {
-                            if (command == "Назад")
-                            {
-                                SenderOfSchoolSubjectsListMessage.SendSubjectsListMessage(botClient, message);
-                            }
-                            else
-                            {
-                                CommandHandlers.TutorForCurrentSubjectCommandHandlers[userId][int.Parse(command)](botClient, message);
-                            }
-                        }
-                        else if(states == UserStates.SelectedTutor)
-                        {
-                            if (command == "Назад")
-                            {
-                                SenderOfSchoolSubjectsListMessage.SendSubjectsListMessage(botClient, message);
-                            }
-                            else
-                            {
-                                CommandHandlers.SelectedTutorCommandHandlers[command](botClient, message);
-                            }
-                        }
-                    }
-                }
-                else
-                {
+                    });
+
+                    var userId = update.Message.Chat.Id;
+
                     await botClient.SendTextMessageAsync(
-                        chatId: userId,
-                        replyMarkup: new ReplyKeyboardRemove(),
-                        text: "Команда не распознана. Для продолжения напишите \"/start\".");
+                            chatId: userId,
+                            text: "Вас привествует электронный помощник по поиску репетиторов.\n\nДанный бот работает в тестом режиме, если есть какие-то пожелания, то пишите @FindTutor_Support.",
+                            replyMarkup: inlineKeyboard,
+                            cancellationToken: cancellationToken);
                 }
             }
         }

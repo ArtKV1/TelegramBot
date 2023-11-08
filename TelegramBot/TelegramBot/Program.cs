@@ -2,5 +2,4 @@
 using TelegramBot;
 
 
-Client.CreateClient();
-
+BotClient.CreateClientAsync();
