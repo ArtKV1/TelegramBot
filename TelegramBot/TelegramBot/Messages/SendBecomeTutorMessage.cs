@@ -2,22 +2,17 @@
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot.Messages.BecomeTutor
+namespace TelegramBot.Messages
 {
     public static partial class Messages
     {
-        public static async Task SendFirstMessageBecomeTutor(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        public static async Task SendBecomeTutorMessageAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             var chatId = update.CallbackQuery.Message.Chat.Id;
             var messageId = update.CallbackQuery.Message.MessageId;
 
             InlineKeyboardMarkup inlineKeyboard = new(new[]
-                        {
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData(text: "Школа", callbackData: "become_tutor_school"),
-                    InlineKeyboardButton.WithCallbackData(text: "Университет", callbackData: "become_tutor_university"),
-                },
+            {
                 new []
                 {
                     InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "main_menu")
@@ -28,7 +23,7 @@ namespace TelegramBot.Messages.BecomeTutor
             await botClient.EditMessageTextAsync(
                     chatId: chatId,
                     messageId: messageId,
-                    text: "Для продолжения выберите учебное заведение.",
+                    text: "Чтобы стать репетитором напишите сообщение @FindTutor_Support по типу:\n\nФИО: Иванов Иван Иванович\nУчебеное заведение: Школа\nПредмет: ОГЭ\nОписание:\nПример описания\n\ntg: @tg",
                     replyMarkup: inlineKeyboard,
                     cancellationToken: cancellationToken);
         }
