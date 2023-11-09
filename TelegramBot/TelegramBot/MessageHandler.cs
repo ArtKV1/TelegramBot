@@ -134,7 +134,7 @@ namespace TelegramBot
 
                         await botClient.SendTextMessageAsync(
                                 chatId: chatId,
-                                text: "Вас привествует электронный помощник по поиску репетиторов.\n\nДанный бот работает в тестом режиме, если есть какие-то пожелания, то пишите @FindTutor_Support.",
+                                text: "Вас привествует электронный помощник по поиску репетиторов.\n\nЕсли здесь нет вашего предмета, то напишите сюда: @FindTutor_Support.",
                                 replyMarkup: inlineKeyboard,
                                 cancellationToken: cancellationToken);
                     }
