@@ -1,15 +1,20 @@
 ﻿using Npgsql;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Types;
 
-namespace TelegramBot.Messages.University
+namespace TelegramBot.Messages.BecomeTutor
 {
     public static partial class Messages
     {
-        public static async Task SendSubjectForSelectedCategoryAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken, string categoryId)
+        public static async Task SendSubjectsFormSelectedCategoryBecomeTutorUniversity(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken, string categoryId)
         {
-
             var connString = "Host=localhost;Port=5432;Username=postgres;Password=123;Database=TelegramBot";
 
             Dictionary<int, string> subjects = new Dictionary<int, string>();
@@ -36,13 +41,13 @@ namespace TelegramBot.Messages.University
 
             if (Users.MessageToDelete.ContainsKey(chatId))
             {
-                foreach (var deleteMessageId in Users.MessageToDelete[chatId]) 
+                foreach (var deleteMessageId in Users.MessageToDelete[chatId])
                 {
                     try
                     {
                         await botClient.DeleteMessageAsync(chatId, deleteMessageId);
                     }
-                    catch(Exception ex) 
+                    catch (Exception ex)
                     {
                         Console.WriteLine(ex.ToString());
                     }
@@ -74,5 +79,6 @@ namespace TelegramBot.Messages.University
             }
             catch (Exception ex) { }
         }
+
     }
 }

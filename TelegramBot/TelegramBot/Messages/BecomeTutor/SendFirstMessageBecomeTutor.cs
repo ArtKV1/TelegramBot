@@ -12,17 +12,23 @@ namespace TelegramBot.Messages.BecomeTutor
             var messageId = update.CallbackQuery.Message.MessageId;
 
             InlineKeyboardMarkup inlineKeyboard = new(new[]
-            {
+                        {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "main_menu"),
+                    InlineKeyboardButton.WithCallbackData(text: "Школа", callbackData: "become_tutor_school"),
+                    InlineKeyboardButton.WithCallbackData(text: "Университет", callbackData: "become_tutor_university"),
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "main_menu")
                 }
+
             });
 
             await botClient.EditMessageTextAsync(
                     chatId: chatId,
                     messageId: messageId,
-                    text: "Функция находится в разработке.",
+                    text: "Для продолжения выберите учебное заведение.",
                     replyMarkup: inlineKeyboard,
                     cancellationToken: cancellationToken);
         }

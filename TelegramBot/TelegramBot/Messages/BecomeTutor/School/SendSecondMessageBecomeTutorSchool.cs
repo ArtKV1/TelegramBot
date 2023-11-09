@@ -1,13 +1,18 @@
 ﻿using Npgsql;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot.Messages.University
+namespace TelegramBot.Messages.BecomeTutor.School
 {
     public static partial class Messages
     {
-        public static async Task SendCategoriesMessageAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        public static async Task SendSecondMessageBecomeTutorSchool(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             var connString = "Host=localhost;Port=5432;Username=postgres;Password=123;Database=TelegramBot";
 
@@ -46,11 +51,11 @@ namespace TelegramBot.Messages.University
             var inlineKeyBoardButtons = categories.Select(category =>
                 new[]{ InlineKeyboardButton.WithCallbackData(
                     text: category.Value,
-                    callbackData: $"university_subj&{category.Key}")
+                    callbackData: $"become_tutor_sch_subj&{category.Key}")
                 }).ToList();
 
-            inlineKeyBoardButtons.Add(new[]{ 
-                InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "find_tutor") 
+            inlineKeyBoardButtons.Add(new[]{
+                InlineKeyboardButton.WithCallbackData(text: "Назад", callbackData: "become_tutor")
             });
 
             var inlineKeyboard = new InlineKeyboardMarkup(inlineKeyBoardButtons);
@@ -58,7 +63,7 @@ namespace TelegramBot.Messages.University
             await botClient.EditMessageTextAsync(
                     chatId: chatId,
                     messageId: messageId,
-                    text: "Выберите категорию предметов.",
+                    text: "Для продолжения выберите категорию предметов.",
                     replyMarkup: inlineKeyboard,
                     cancellationToken: cancellationToken);
         }
