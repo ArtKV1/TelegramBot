@@ -25,7 +25,7 @@ namespace TelegramBot.Messages
             await botClient.EditMessageTextAsync(
                     chatId: chatId,
                     messageId: messageId,
-                    text: "Чтобы стать репетитором напишите сообщение, которое будет содержать:\n\nФИО: Иванов Иван Иванович\nУчебеное заведение: Школа\nПредмет: ОГЭ\nОписание:\nПример описания\n\ntg: @tg",
+                    text: "Чтобы стать репетитором напишите сообщение, которое будет содержать:\n\nФИО: Иванов Иван Иванович\nУчебеное заведение: Школа\nПредмет: Русский язык, ОГЭ(вторая часть)\nОписание:\nПример описания\n\ntg: @tg",
                     replyMarkup: inlineKeyboard,
                     cancellationToken: cancellationToken);
         }
