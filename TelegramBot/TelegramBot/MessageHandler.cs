@@ -14,6 +14,11 @@ namespace TelegramBot
                 var chatId = update.CallbackQuery.From.Id;
                 var messageId = update.CallbackQuery.Message.MessageId;
 
+                if(!Users.UsersState.ContainsKey(chatId))
+                {
+                    Users.UsersState[chatId] = UserStates.Other;
+                }
+
                 Console.WriteLine($"{chatId}\t|\t{callbackData}\t|\t{update.CallbackQuery.Message.MessageId}");
                 if (callbackData == "main_menu")
                 {
@@ -91,28 +96,52 @@ namespace TelegramBot
                 {
                     await Messages.Messages.SendBecomeTutorMessageAsync(botClient, update, cancellationToken);
                 }
+                else if (callbackData.Contains("admin"))
+                {
+                    var status = callbackData.Split("&")[1];
+                    var userId = callbackData.Split("&")[2];
+
+                    await Messages.Messages.SendApproveOrRejectMessage(botClient, update, cancellationToken, status, userId);
+                }
             }
             else
             {
-                var chatId = update.Message.Chat.Id;
                 if (update.Message != null)
                 {
                     Console.WriteLine($"{update.Message.Chat.Id}\t|\t{update.Message.Text}");
 
-                    InlineKeyboardMarkup inlineKeyboard = new(new[]
-                    {
-                        new []
-                        {
-                            InlineKeyboardButton.WithCallbackData(text: "Найти репетитора", callbackData: "find_tutor"),
-                            InlineKeyboardButton.WithCallbackData(text: "Стать репетитором", callbackData: "become_tutor")
-                        }
-                    });
+                    var chatId = update.Message.Chat.Id;
+                    var messageId = update.Message.MessageId;
 
-                    await botClient.SendTextMessageAsync(
-                            chatId: chatId,
-                            text: "Вас привествует электронный помощник по поиску репетиторов.\n\nДанный бот работает в тестом режиме, если есть какие-то пожелания, то пишите @FindTutor_Support.",
-                            replyMarkup: inlineKeyboard,
-                            cancellationToken: cancellationToken);
+                    if (!Users.UsersState.ContainsKey(chatId))
+                    {
+                        Users.UsersState[chatId] = UserStates.Other;
+                    }
+                    if (Users.UsersState[chatId] == UserStates.Other) 
+                    {
+                        InlineKeyboardMarkup inlineKeyboard = new(new[]
+                        {
+                            new []
+                            {
+                                 InlineKeyboardButton.WithCallbackData(text: "Найти репетитора", callbackData: "find_tutor"),
+                                 InlineKeyboardButton.WithCallbackData(text: "Стать репетитором", callbackData: "become_tutor")
+                            }
+                        });
+
+                        await botClient.DeleteMessageAsync(
+                                chatId: chatId,
+                                messageId: messageId);
+
+                        await botClient.SendTextMessageAsync(
+                                chatId: chatId,
+                                text: "Вас привествует электронный помощник по поиску репетиторов.\n\nДанный бот работает в тестом режиме, если есть какие-то пожелания, то пишите @FindTutor_Support.",
+                                replyMarkup: inlineKeyboard,
+                                cancellationToken: cancellationToken);
+                    }
+                    else
+                    {
+                        await Messages.Messages.SendMessageToAdminAsync(botClient, update, cancellationToken);
+                    }
                 }
             }
         }

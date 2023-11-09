@@ -11,6 +11,8 @@ namespace TelegramBot.Messages
             var chatId = update.CallbackQuery.Message.Chat.Id;
             var messageId = update.CallbackQuery.Message.MessageId;
 
+            Users.UsersState[chatId] = UserStates.BecomeTutor;
+
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {
                 new []
@@ -23,7 +25,7 @@ namespace TelegramBot.Messages
             await botClient.EditMessageTextAsync(
                     chatId: chatId,
                     messageId: messageId,
-                    text: "Чтобы стать репетитором напишите сообщение @FindTutor_Support по типу:\n\nФИО: Иванов Иван Иванович\nУчебеное заведение: Школа\nПредмет: ОГЭ\nОписание:\nПример описания\n\ntg: @tg",
+                    text: "Чтобы стать репетитором напишите сообщение, которое будет содержать:\n\nФИО: Иванов Иван Иванович\nУчебеное заведение: Школа\nПредмет: ОГЭ\nОписание:\nПример описания\n\ntg: @tg",
                     replyMarkup: inlineKeyboard,
                     cancellationToken: cancellationToken);
         }

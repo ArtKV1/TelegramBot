@@ -11,6 +11,8 @@ namespace TelegramBot.Messages
             var chatId = update.CallbackQuery.Message.Chat.Id;
             var messageId = update.CallbackQuery.Message.MessageId;
 
+            Users.UsersState[chatId] = UserStates.Other;
+
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {
                 new []
