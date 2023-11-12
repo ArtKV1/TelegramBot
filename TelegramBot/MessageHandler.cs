@@ -117,11 +117,7 @@ namespace TelegramBot
                     var chatId = update.Message.Chat.Id;
                     var messageId = update.Message.MessageId;
 
-                    if (!Users.UsersState.ContainsKey(chatId))
-                    {
-                        Users.UsersState[chatId] = UserStates.Other;
-                    }
-                    if (Users.UsersState[chatId] == UserStates.Other) 
+                    if (update.Message.Text == "/start")
                     {
                         InlineKeyboardMarkup inlineKeyboard = new(new[]
                         {
@@ -144,13 +140,41 @@ namespace TelegramBot
                     }
                     else
                     {
-                        if (update.Message.ReplyToMessage != null)
+                        if (!Users.UsersState.ContainsKey(chatId))
                         {
-                            await Messages.BecomeTutor.Messages.SendConfirmationMessageAsync(botClient, update, cancellationToken);
+                            Users.UsersState[chatId] = UserStates.Other;
+                        }
+                        if (Users.UsersState[chatId] == UserStates.Other)
+                        {
+                            InlineKeyboardMarkup inlineKeyboard = new(new[]
+                            {
+                                new []
+                                {
+                                     InlineKeyboardButton.WithCallbackData(text: "Найти репетитора", callbackData: "find_tutor"),
+                                     InlineKeyboardButton.WithCallbackData(text: "Стать репетитором", callbackData: "become_tutor")
+                                }
+                            });
+
+                            await botClient.DeleteMessageAsync(
+                                    chatId: chatId,
+                                    messageId: messageId);
+
+                            await botClient.SendTextMessageAsync(
+                                    chatId: chatId,
+                                    text: "Вас привествует электронный помощник по поиску репетиторов.\n\nЕсли здесь нет вашего предмета, то напишите сюда: @FindTutor_Support.",
+                                    replyMarkup: inlineKeyboard,
+                                    cancellationToken: cancellationToken);
                         }
                         else
                         {
+                            if (update.Message.ReplyToMessage != null)
+                            {
+                                await Messages.BecomeTutor.Messages.SendConfirmationMessageAsync(botClient, update, cancellationToken);
+                            }
+                            else
+                            {
 
+                            }
                         }
                     }
                 }
