@@ -17,7 +17,7 @@ namespace TelegramBot.Messages.University
             {
                 conn.Open();
 
-                using (var cmd = new NpgsqlCommand("SELECT id, category FROM categories", conn))
+                using (var cmd = new NpgsqlCommand("SELECT id, category FROM categories order by category", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {

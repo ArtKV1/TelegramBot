@@ -18,7 +18,7 @@ namespace TelegramBot.Messages.School
             {
                 conn.Open();
 
-                using (var cmd = new NpgsqlCommand($"SELECT id, subject FROM school_subjects WHERE categoryid = {categoryId}", conn))
+                using (var cmd = new NpgsqlCommand($"SELECT id, subject FROM school_subjects WHERE categoryid = {categoryId} order by subject", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
