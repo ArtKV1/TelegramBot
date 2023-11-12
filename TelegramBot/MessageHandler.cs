@@ -173,7 +173,13 @@ namespace TelegramBot
                             }
                             else
                             {
-
+                                try
+                                {
+                                    await botClient.DeleteMessageAsync(
+                                        chatId: chatId,
+                                        messageId: messageId);
+                                }
+                                catch { }
                             }
                         }
                     }
