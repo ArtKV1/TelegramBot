@@ -22,10 +22,17 @@ namespace TelegramBot.Messages
 
             });
 
+            var text = "Чтобы стать репетитором напишите ответ на данное сообщение, которое будет содержать:\n\nФИО: Иванов Иван Иванович\nУчебеное заведение: Школа\nПредмет: Русский язык, ОГЭ(вторая часть)\nОписание:\nПример описания\n\ntg: @tg\n\nОбязательно проверьте, что ваше сообщение содержит ";
+
+            if (update.CallbackQuery.Message.Text.Contains("Проверьте все данные перед отправкой."))
+            {
+                text += "\n\nДанные которые вы заполнили до этого:\n\n" + update.CallbackQuery.Message.Text.Remove(0, 39);
+            }
+
             await botClient.EditMessageTextAsync(
                     chatId: chatId,
                     messageId: messageId,
-                    text: "Чтобы стать репетитором напишите сообщение, которое будет содержать:\n\nФИО: Иванов Иван Иванович\nУчебеное заведение: Школа\nПредмет: Русский язык, ОГЭ(вторая часть)\nОписание:\nПример описания\n\ntg: @tg",
+                    text: text,
                     replyMarkup: inlineKeyboard,
                     cancellationToken: cancellationToken);
         }

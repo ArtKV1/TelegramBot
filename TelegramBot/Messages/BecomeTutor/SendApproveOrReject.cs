@@ -2,7 +2,7 @@
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot.Messages
+namespace TelegramBot.Messages.BecomeTutor
 {
     public static partial class Messages
     {
@@ -21,10 +21,6 @@ namespace TelegramBot.Messages
                     messageId: update.CallbackQuery.Message.MessageId,
                     text: text);
 
-                await botClient.SendTextMessageAsync(
-                    chatId: long.Parse(userId),
-                    text: "Ваша заявка одобрена.");
-
                 InlineKeyboardMarkup inlineKeyboard = new(new[]
                 {
                     new []
@@ -36,7 +32,7 @@ namespace TelegramBot.Messages
 
                 await botClient.SendTextMessageAsync(
                         chatId: long.Parse(userId),
-                        text: "Вас привествует электронный помощник по поиску репетиторов.\n\nЕсли здесь нет вашего предмета, то напишите сюда: @FindTutor_Support.",
+                        text: "Ваша заявка одобрена.\n\nВас привествует электронный помощник по поиску репетиторов.\n\nЕсли здесь нет вашего предмета, то напишите сюда: @FindTutor_Support.",
                         replyMarkup: inlineKeyboard,
                         cancellationToken: cancellationToken);
             }
@@ -52,10 +48,6 @@ namespace TelegramBot.Messages
                     messageId: update.CallbackQuery.Message.MessageId,
                     text: text);
 
-                await botClient.SendTextMessageAsync(
-                    chatId: long.Parse(userId),
-                    text: "Ваша заявка отклонена. Подробнее можно узнать тут: @FindTutor_Support");
-
                 InlineKeyboardMarkup inlineKeyboard = new(new[]
                 {
                     new []
@@ -67,7 +59,7 @@ namespace TelegramBot.Messages
 
                 await botClient.SendTextMessageAsync(
                         chatId: long.Parse(userId),
-                        text: "Вас привествует электронный помощник по поиску репетиторов.\n\nДанный бот работает в тестом режиме, если есть какие-то пожелания, то пишите @FindTutor_Support.",
+                        text: "Ваша заявка отклонена. Подробнее можно узнать тут: @FindTutor_Support.\n\nВас привествует электронный помощник по поиску репетиторов.\n\nЕсли здесь нет вашего предмета, то напишите сюда: @FindTutor_Support.",
                         replyMarkup: inlineKeyboard,
                         cancellationToken: cancellationToken);
             }

@@ -2,20 +2,16 @@
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot.Messages
+namespace TelegramBot.Messages.BecomeTutor
 {
     public static partial class Messages
     {
         public static async Task SendMessageToAdminAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            var chatId = update.Message.Chat.Id;
-            var messageId = update.Message.MessageId;
+            var chatId = update.CallbackQuery.Message.Chat.Id;
+            var messageId = update.CallbackQuery.Message.MessageId;
 
             Users.UsersState[chatId] = UserStates.Other;
-
-            await botClient.DeleteMessageAsync(
-                chatId: chatId,
-                messageId: messageId - 1);
 
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {
@@ -28,12 +24,13 @@ namespace TelegramBot.Messages
 
             var text = "Ваша заявка отправлена. Если она будет рассмотрена, то вам придёт сообщение.";
 
-            await botClient.SendTextMessageAsync(
+            await botClient.EditMessageTextAsync(
                 chatId: chatId,
+                messageId: messageId,
                 text: text,
                 replyMarkup: inlineKeyboard);
 
-            var result = $"Одобрение заявки.\n\n{update.Message.Text}";
+            var result = $"Одобрение заявки.\n\n{update.CallbackQuery.Message.Text.Remove(0, 39)}";
 
             InlineKeyboardMarkup inlineKeyboardtoAdmin = new(new[]
             {

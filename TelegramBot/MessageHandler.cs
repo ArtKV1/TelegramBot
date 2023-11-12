@@ -96,12 +96,16 @@ namespace TelegramBot
                 {
                     await Messages.Messages.SendBecomeTutorMessageAsync(botClient, update, cancellationToken);
                 }
+                else if (callbackData == "send_adm")
+                {
+                    await Messages.BecomeTutor.Messages.SendMessageToAdminAsync(botClient, update, cancellationToken);
+                }
                 else if (callbackData.Contains("admin"))
                 {
                     var status = callbackData.Split("&")[1];
                     var userId = callbackData.Split("&")[2];
 
-                    await Messages.Messages.SendApproveOrRejectMessage(botClient, update, cancellationToken, status, userId);
+                    await Messages.BecomeTutor.Messages.SendApproveOrRejectMessage(botClient, update, cancellationToken, status, userId);
                 }
             }
             else
@@ -140,7 +144,14 @@ namespace TelegramBot
                     }
                     else
                     {
-                        await Messages.Messages.SendMessageToAdminAsync(botClient, update, cancellationToken);
+                        if (update.Message.ReplyToMessage != null)
+                        {
+                            await Messages.BecomeTutor.Messages.SendConfirmationMessageAsync(botClient, update, cancellationToken);
+                        }
+                        else
+                        {
+
+                        }
                     }
                 }
             }
