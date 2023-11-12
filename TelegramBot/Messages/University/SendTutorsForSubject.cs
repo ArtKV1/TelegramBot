@@ -45,8 +45,6 @@ namespace TelegramBot.Messages.University
             var messageId = update.CallbackQuery.Message.MessageId;
             int i = 0;
 
-            Users.LastMessage[chatId] = messageId;
-
             foreach (var tutor in tutors)
             {
                 i++;
@@ -86,12 +84,15 @@ namespace TelegramBot.Messages.University
                 }
             });
 
-            await botClient.SendTextMessageAsync(
+            Message messageLast = await botClient.SendTextMessageAsync(
                     chatId: chatId,
                     text: "Нажмите чтобы вернуться.",
                     replyMarkup: inlineKeyboard,
                     cancellationToken: cancellationToken
                     );
+
+            Users.LastMessage[chatId] = messageLast.MessageId;
+
             try
             {
                 await botClient.DeleteMessageAsync(
