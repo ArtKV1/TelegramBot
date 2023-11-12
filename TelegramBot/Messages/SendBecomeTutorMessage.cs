@@ -13,6 +13,8 @@ namespace TelegramBot.Messages
 
             Users.UsersState[chatId] = UserStates.BecomeTutor;
 
+            Users.LastMessage[chatId] = messageId;
+
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {
                 new []
@@ -22,7 +24,7 @@ namespace TelegramBot.Messages
 
             });
 
-            var text = "Чтобы стать репетитором напишите ответ на данное сообщение, которое будет содержать:\n\nФИО: Иванов Иван Иванович\nУчебеное заведение: Школа\nПредмет: Русский язык, ОГЭ(вторая часть)\nОписание:\nПример описания\n\ntg: @tg\n\nОбязательно проверьте, что ваше сообщение содержит ";
+            var text = "Чтобы стать репетитором, перешлите это сообщение и добавьте к нему ваши данные:\n\nФИО: Иванов Иван Иванович\nУчебеное заведение: Школа\nПредмет: Русский язык, ОГЭ(вторая часть)\nОписание:\nПример описания\n\ntg: @tg";
 
             if (update.CallbackQuery.Message.Text.Contains("Проверьте все данные перед отправкой."))
             {

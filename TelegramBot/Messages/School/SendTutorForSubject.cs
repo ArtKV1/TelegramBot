@@ -39,6 +39,8 @@ namespace TelegramBot.Messages.School
 
             var text = $"{tutor[1]}\n\n{tutor[2]}";
 
+            Users.LastMessage[chatId] = messageId;
+
             InlineKeyboardMarkup inlineKeyboardt = new(new[]
                 {
                     new []

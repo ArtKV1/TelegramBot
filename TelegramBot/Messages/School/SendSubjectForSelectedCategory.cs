@@ -33,6 +33,7 @@ namespace TelegramBot.Messages.School
             var chatId = update.CallbackQuery.Message.Chat.Id;
             var messageId = update.CallbackQuery.Message.MessageId;
 
+            Users.LastMessage[chatId] = messageId;
 
             if (Users.MessageToDelete.ContainsKey(chatId))
             {

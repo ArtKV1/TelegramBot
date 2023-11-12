@@ -37,6 +37,8 @@ namespace TelegramBot.Messages.University
             var chatId = update.CallbackQuery.Message.Chat.Id;
             var messageId = update.CallbackQuery.Message.MessageId;
 
+            Users.LastMessage[chatId] = messageId;
+
             var text = $"{tutor[1]}\n\n{tutor[2]}";
 
             InlineKeyboardMarkup inlineKeyboardt = new(new[]

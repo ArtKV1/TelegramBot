@@ -30,6 +30,29 @@ namespace TelegramBot.Messages.BecomeTutor
                     }
                 });
 
+                try
+                {
+                    await botClient.DeleteMessageAsync(
+                        chatId: userId,
+                        messageId: Users.LastMessage[long.Parse(userId)]);
+                }
+                catch { }
+
+                if (Users.MessageToDelete.ContainsKey(long.Parse(userId)))
+                {
+                    List<int> ids = Users.MessageToDelete[long.Parse(userId)];
+                    foreach(var id in ids)
+                    {
+                        try
+                        {
+                            await botClient.DeleteMessageAsync(
+                                chatId: userId,
+                                messageId: id);
+                        }
+                        catch { }
+                    }
+                }
+
                 await botClient.SendTextMessageAsync(
                         chatId: long.Parse(userId),
                         text: "Ваша заявка одобрена.\n\nВас привествует электронный помощник по поиску репетиторов.\n\nЕсли здесь нет вашего предмета, то напишите сюда: @FindTutor_Support.",
@@ -56,6 +79,29 @@ namespace TelegramBot.Messages.BecomeTutor
                         InlineKeyboardButton.WithCallbackData(text: "Стать репетитором", callbackData: "become_tutor")
                     }
                 });
+
+                try
+                {
+                    await botClient.DeleteMessageAsync(
+                        chatId: userId,
+                        messageId: Users.LastMessage[long.Parse(userId)]);
+                }
+                catch { }
+
+                if (Users.MessageToDelete.ContainsKey(long.Parse(userId)))
+                {
+                    List<int> ids = Users.MessageToDelete[long.Parse(userId)];
+                    foreach (var id in ids)
+                    {
+                        try
+                        {
+                            await botClient.DeleteMessageAsync(
+                                chatId: userId,
+                                messageId: id);
+                        }
+                        catch { }
+                    }
+                }
 
                 await botClient.SendTextMessageAsync(
                         chatId: long.Parse(userId),

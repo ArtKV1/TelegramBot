@@ -33,6 +33,8 @@ namespace TelegramBot.Messages.BecomeTutor
 
             var text = $"Проверьте все данные перед отправкой.\n\n{update.Message.Text}";
 
+            Users.LastMessage[chatId] = messageId;
+
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {
                     new []

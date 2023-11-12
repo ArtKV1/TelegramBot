@@ -30,6 +30,8 @@ namespace TelegramBot.Messages.BecomeTutor
                 text: text,
                 replyMarkup: inlineKeyboard);
 
+            Users.LastMessage[chatId] = messageId;
+
             var result = $"Одобрение заявки.\n\n{update.CallbackQuery.Message.Text.Remove(0, 39)}";
 
             InlineKeyboardMarkup inlineKeyboardtoAdmin = new(new[]

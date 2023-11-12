@@ -44,6 +44,9 @@ namespace TelegramBot.Messages.University
             var chatId = update.CallbackQuery.Message.Chat.Id;
             var messageId = update.CallbackQuery.Message.MessageId;
             int i = 0;
+
+            Users.LastMessage[chatId] = messageId;
+
             foreach (var tutor in tutors)
             {
                 i++;

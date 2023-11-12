@@ -13,6 +13,8 @@ namespace TelegramBot.Messages
 
             Users.UsersState[chatId] = UserStates.Other;
 
+            Users.LastMessage[chatId] = messageId;
+
             InlineKeyboardMarkup inlineKeyboard = new(new[]
             {
                 new []

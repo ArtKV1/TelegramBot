@@ -34,14 +34,7 @@ namespace TelegramBot.Messages.School
             var chatId = update.CallbackQuery.Message.Chat.Id;
             var messageId = update.CallbackQuery.Message.MessageId;
 
-            if (update.CallbackQuery != null)
-            {
-                chatId = update.CallbackQuery.From.Id;
-            }
-            else
-            {
-                chatId = update.Message.Chat.Id;
-            }
+            Users.LastMessage[chatId] = messageId;
 
             var inlineKeyBoardButtons = categories.Select(category =>
                 new[]{ InlineKeyboardButton.WithCallbackData(
